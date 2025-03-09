@@ -8,7 +8,7 @@ from src.routes import books
 app = FastAPI()
 
 
-app.include_router(books.router, prefix="/goods")
+app.include_router(books.router, prefix="/products")
 
 
 @app.get("/")
