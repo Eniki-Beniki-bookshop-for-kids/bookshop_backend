@@ -37,7 +37,7 @@ class BookShortResponse(BaseModel):
         le=5,
         description="The rate of the book",
     )
-    comments_count: int = Field(
+    comments: int = Field(
         ge=0,
         description="The number of comments of the book",
     )

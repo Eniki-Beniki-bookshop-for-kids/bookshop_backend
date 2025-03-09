@@ -15,10 +15,15 @@ router = APIRouter(
 )
 
 
+# response_model=List[BookShortResponse]
 @router.get("/", response_model=List[BookShortResponse])
 async def get_all_books(session: AsyncSession = Depends(db)):
     books_repository = await repository_books.get_all_books(session)
-    return books_repository
+    if not books_repository:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Not found any book"
+        )
+    return [BookShortResponse(**book) for book in books_repository]
 
 
 @router.get("/{book_id}")
