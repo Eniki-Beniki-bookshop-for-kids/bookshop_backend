@@ -2,9 +2,10 @@ from typing import List
 
 from fastapi import APIRouter
 from fastapi import Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.database.connect import get_db
+from src.database.db import db
+from src.repository import books as repository_books
 from src.schemas.books import BookShortResponse
 
 router = APIRouter(
@@ -15,10 +16,9 @@ router = APIRouter(
 
 
 @router.get("/", response_model=List[BookShortResponse])
-async def get_all_books(db: Session = Depends(get_db)):
-    if False:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
-    return [{"id": 1}]
+async def get_all_books(session: AsyncSession = Depends(db)):
+    books_repository = await repository_books.get_all_books(session)
+    return books_repository
 
 
 @router.get("/{book_id}")

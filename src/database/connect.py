@@ -1,7 +1,11 @@
-from fastapi import HTTPException, status
-from sqlalchemy import create_engine
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import sessionmaker
+import contextlib
+
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    async_sessionmaker,
+    create_async_engine,
+    AsyncSession,
+)
 
 from src.config.config import settings
 
@@ -9,16 +13,26 @@ from src.config.config import settings
 URI = settings.db_url
 
 
-engine = create_engine(URI, echo=True)
-DBSession = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+class DataBaseSessionManager:
+
+    def __init__(self, url):
+        self._engine: AsyncEngine | None = create_async_engine(url)
+        self._session_maker: async_sessionmaker | None = async_sessionmaker(
+            autoflush=False, autocommit=False, bind=self._engine, expire_on_commit=False
+        )
+
+    @contextlib.asynccontextmanager
+    async def session(self):
+        if self._session_maker is None:
+            raise Exception("Session maker is not initialized")
+        session: AsyncSession = self._session_maker()
+        try:
+            yield session
+        except Exception as e:
+            await session.rollback()
+            raise e
+        finally:
+            await session.close()
 
 
-def get_db():
-    db = DBSession()
-    try:
-        yield db
-    except SQLAlchemyError as err:
-        db.rollback()
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(err))
-    finally:
-        db.close()
+session_manager = DataBaseSessionManager(URI)
