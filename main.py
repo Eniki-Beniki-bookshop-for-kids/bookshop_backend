@@ -3,12 +3,13 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.db import db
-from src.routes import books
+from src.routes import books, comments
 
 app = FastAPI()
 
 
 app.include_router(books.router, prefix="/products")
+app.include_router(comments.router, prefix="/comments")
 
 
 @app.get("/")
