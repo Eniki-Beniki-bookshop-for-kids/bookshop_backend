@@ -11,7 +11,7 @@ async def get_all_books(session: AsyncSession):
             Book.author,
             Book.title,
             Book.price,
-            Book.available,
+            Book.is_available,
             Book.discount,
             func.coalesce(func.avg(Comment.rate), 0).label("rate"),
             func.count(Comment.id).label("comments_count"),

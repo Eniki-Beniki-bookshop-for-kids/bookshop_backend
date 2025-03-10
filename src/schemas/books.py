@@ -26,7 +26,7 @@ class BookShortResponse(BaseModel):
         gt=0,
         description="The price of the book",
     )
-    available: bool = Field(
+    is_available: bool = Field(
         description="The availability of the book",
     )
     discount: float = Field(
