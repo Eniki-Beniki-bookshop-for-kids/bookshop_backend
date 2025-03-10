@@ -1,8 +1,8 @@
-"""Create books and comments tables
+"""Create_books_and_comments_tables
 
-Revision ID: efe0637ad1de
+Revision ID: 7760af120476
 Revises: f4d58e4a8787
-Create Date: 2025-03-09 15:08:26.765426
+Create Date: 2025-03-10 13:52:49.528763
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'efe0637ad1de'
+revision: str = '7760af120476'
 down_revision: Union[str, None] = 'f4d58e4a8787'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -26,7 +26,8 @@ def upgrade() -> None:
     sa.Column('author', sa.String(), nullable=False),
     sa.Column('title', sa.String(), nullable=False),
     sa.Column('price', sa.Numeric(), nullable=False),
-    sa.Column('available', sa.Boolean(), nullable=False),
+    sa.Column('is_available', sa.Boolean(), nullable=False),
+    sa.Column('stock_quantity', sa.Integer(), nullable=True),
     sa.Column('discount', sa.Numeric(precision=5, scale=2), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('age_category', sa.Integer(), nullable=False),
@@ -35,14 +36,14 @@ def upgrade() -> None:
     )
     op.create_index(op.f('ix_books_age_category'), 'books', ['age_category'], unique=False)
     op.create_index(op.f('ix_books_author'), 'books', ['author'], unique=False)
-    op.create_index(op.f('ix_books_available'), 'books', ['available'], unique=False)
     op.create_index(op.f('ix_books_discount'), 'books', ['discount'], unique=False)
     op.create_index(op.f('ix_books_id'), 'books', ['id'], unique=False)
+    op.create_index(op.f('ix_books_is_available'), 'books', ['is_available'], unique=False)
     op.create_index(op.f('ix_books_price'), 'books', ['price'], unique=False)
     op.create_index(op.f('ix_books_title'), 'books', ['title'], unique=False)
     op.create_table('comments',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('text', sa.String(), nullable=True),
+    sa.Column('review_text', sa.String(), nullable=True),
     sa.Column('rate', sa.Numeric(precision=3, scale=1), nullable=False),
     sa.Column('published_at', sa.DateTime(), nullable=True),
     sa.Column('book_id', sa.Integer(), nullable=False),
@@ -62,9 +63,9 @@ def downgrade() -> None:
     op.drop_table('comments')
     op.drop_index(op.f('ix_books_title'), table_name='books')
     op.drop_index(op.f('ix_books_price'), table_name='books')
+    op.drop_index(op.f('ix_books_is_available'), table_name='books')
     op.drop_index(op.f('ix_books_id'), table_name='books')
     op.drop_index(op.f('ix_books_discount'), table_name='books')
-    op.drop_index(op.f('ix_books_available'), table_name='books')
     op.drop_index(op.f('ix_books_author'), table_name='books')
     op.drop_index(op.f('ix_books_age_category'), table_name='books')
     op.drop_table('books')

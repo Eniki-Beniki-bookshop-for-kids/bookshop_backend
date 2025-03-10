@@ -20,7 +20,8 @@ class Book(Base):
     author = Column(String, index=True, nullable=False, default="Unknown")
     title = Column(String, index=True, nullable=False)
     price = Column(Numeric, index=True, nullable=False, default=0.0)
-    available = Column(Boolean, index=True, nullable=False, default=1)
+    is_available = Column(Boolean, index=True, nullable=False, default=1)
+    stock_quantity = Column(Integer, nullable=True, default=1)
     discount = Column(Numeric(5, 2), index=True, nullable=False, default=0.0)
     created_at = Column(DateTime, default=func.now())
     age_category = Column(Integer, index=True, nullable=False, default=0)
@@ -53,7 +54,7 @@ class Comment(Base):
     __tablename__ = "comments"
 
     id = Column(Integer, primary_key=True, index=True)
-    text = Column(String, nullable=True)
+    review_text = Column(String, nullable=True)
     rate = Column(Numeric(3, 1), index=True, nullable=False, default=5.0)
     published_at = Column(DateTime, default=func.now())
     book_id = Column(Integer, ForeignKey("books.id"), nullable=False)
