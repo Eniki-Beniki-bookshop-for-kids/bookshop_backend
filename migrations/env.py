@@ -1,7 +1,8 @@
 import asyncio
 from logging.config import fileConfig
 
-from sqlalchemy.engine import Connection
+from asyncpg import Connection
+from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
@@ -68,7 +69,6 @@ async def run_async_migrations():
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
-        connect_args={"statement_cache_size": 0},
     )
 
     async with connectable.connect() as connection:
@@ -91,3 +91,8 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
+
+
+# echo $DATABASE_URL  # для Linux/Mac
+# echo %DATABASE_URL%  # для Windows CMD
+# echo $env:DATABASE_URL  # для PowerShell

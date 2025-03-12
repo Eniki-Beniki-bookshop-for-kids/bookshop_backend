@@ -15,14 +15,14 @@ Base = declarative_base()
 
 class Book(Base):
     __tablename__ = "books"
-
     id = Column(Integer, primary_key=True, index=True)
     author = Column(String, index=True, nullable=False, default="Unknown")
     title = Column(String, index=True, nullable=False)
     price = Column(Numeric, index=True, nullable=False, default=0.0)
     is_available = Column(Boolean, index=True, nullable=False, default=1)
-    stock_quantity = Column(Integer, nullable=True, default=1)
+    stock_quantity = Column(Integer, nullable=False, default=1)
     discount = Column(Numeric(5, 2), index=True, nullable=False, default=0.0)
+    test = Column(String, nullable=False, default="test1")
     created_at = Column(DateTime, default=func.now())
     age_category = Column(Integer, index=True, nullable=False, default=0)
     description = Column(String(300), nullable=True)
