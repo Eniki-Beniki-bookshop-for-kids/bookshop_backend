@@ -1,8 +1,8 @@
-"""Create_books_and_comments_tables
+"""Initial migration
 
-Revision ID: 7760af120476
-Revises: f4d58e4a8787
-Create Date: 2025-03-10 13:52:49.528763
+Revision ID: 658ea29ec6d8
+Revises: 
+Create Date: 2025-03-12 23:02:45.766683
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '7760af120476'
-down_revision: Union[str, None] = 'f4d58e4a8787'
+revision: str = '658ea29ec6d8'
+down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
