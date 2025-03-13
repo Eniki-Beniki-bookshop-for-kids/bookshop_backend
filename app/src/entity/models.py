@@ -57,6 +57,7 @@ class Comment(Base):
     review_text = Column(String, nullable=True)
     rate = Column(Numeric(3, 1), index=True, nullable=False, default=5.0)
     published_at = Column(DateTime, default=func.now())
+    test = Column(String, nullable=False, default="test1")
     book_id = Column(Integer, ForeignKey("books.id"), nullable=False)
 
     book = relationship("Book", back_populates="comments")

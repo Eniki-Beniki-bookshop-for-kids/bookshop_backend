@@ -4,9 +4,9 @@ from fastapi import APIRouter
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.database.db import db
-from src.repository import books as repository_books
-from src.schemas.books import BookShortResponse
+from app.src.database.db import db
+from app.src.repository import books as repository_books
+from app.src.schemas.books import BookShortResponse
 
 router = APIRouter(
     prefix="/books",
