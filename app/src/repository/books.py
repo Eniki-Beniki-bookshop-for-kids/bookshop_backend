@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import and_, func, select
 
-from src.entity.models import Book, Comment
+from app.src.entity.models import Book, Comment
 
 
 async def get_all_books(session: AsyncSession):

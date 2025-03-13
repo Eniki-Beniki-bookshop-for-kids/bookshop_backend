@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import and_, func, select, desc
 
-from src.entity.models import Book, Comment
-from src.schemas.comments import CommentModel
+from app.src.entity.models import Book, Comment
+from app.src.schemas.comments import CommentModel
 
 
 async def get_comments_by_book(session: AsyncSession, book_id: int):

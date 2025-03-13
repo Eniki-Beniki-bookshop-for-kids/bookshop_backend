@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import (
     AsyncSession,
 )
 
-from src.config.config import settings
+from app.src.config.config import settings
 
 
 URI = settings.db_url
