@@ -23,9 +23,7 @@ class Book(Base):
     stock_quantity = Column(Integer, nullable=False, default=1)
     discount = Column(Numeric(5, 2), index=True, nullable=False, default=0.0)
     created_at = Column(DateTime, default=func.now(), nullable=False)
-    updated_at = Column(
-        DateTime, default=func.now(), onupdate=func.now(), nullable=False
-    )
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)
     age_category = Column(Integer, index=True, nullable=False, default=0)
     description = Column(String(300), nullable=True)
 

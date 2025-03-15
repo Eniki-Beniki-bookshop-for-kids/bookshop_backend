@@ -3,18 +3,19 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.src.database.db import db
-from app.src.routes import books, comments
+from app.src.routes import books, comments, auth
 
 app = FastAPI()
 
 
+app.include_router(auth.router, prefix="/api")
 app.include_router(books.router, prefix="/products")
 app.include_router(comments.router, prefix="/comments")
 
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Welcome to 'Eniki-Beniki' bookshop for kids."}
 
 
 @app.get("/api/healthchecker")
