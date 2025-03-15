@@ -40,8 +40,8 @@ class BookShortResponse(BaseModel):
         ge=0,
         description="The number of comments of the book",
     )
-    created_at: datetime = datetime.utcnow()
-    updated_at: datetime = datetime.utcnow()
+    created_at: datetime
+    updated_at: datetime
     age_category: int = Field(
         ge=0,
         description="The age category of the book",

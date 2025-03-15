@@ -9,4 +9,3 @@ alembic==1.15.1
 libgravatar==1.0.4
 python-jose==3.4.0
 passlib==1.7.4
-python-multipart==0.0.20

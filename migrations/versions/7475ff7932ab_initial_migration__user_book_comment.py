@@ -1,8 +1,8 @@
-"""Initial migration
+"""Initial migration_ user_book_comment
 
-Revision ID: 658ea29ec6d8
+Revision ID: 7475ff7932ab
 Revises: 
-Create Date: 2025-03-12 23:02:45.766683
+Create Date: 2025-03-15 14:02:03.637043
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '658ea29ec6d8'
+revision: str = '7475ff7932ab'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -27,9 +27,10 @@ def upgrade() -> None:
     sa.Column('title', sa.String(), nullable=False),
     sa.Column('price', sa.Numeric(), nullable=False),
     sa.Column('is_available', sa.Boolean(), nullable=False),
-    sa.Column('stock_quantity', sa.Integer(), nullable=True),
+    sa.Column('stock_quantity', sa.Integer(), nullable=False),
     sa.Column('discount', sa.Numeric(precision=5, scale=2), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('age_category', sa.Integer(), nullable=False),
     sa.Column('description', sa.String(length=300), nullable=True),
     sa.PrimaryKeyConstraint('id')
@@ -41,13 +42,31 @@ def upgrade() -> None:
     op.create_index(op.f('ix_books_is_available'), 'books', ['is_available'], unique=False)
     op.create_index(op.f('ix_books_price'), 'books', ['price'], unique=False)
     op.create_index(op.f('ix_books_title'), 'books', ['title'], unique=False)
+    op.create_table('users',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('username', sa.String(length=50), nullable=False),
+    sa.Column('email', sa.String(length=250), nullable=False),
+    sa.Column('avatar', sa.String(length=255), nullable=True),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.Column('password', sa.String(length=255), nullable=False),
+    sa.Column('refresh_token', sa.String(length=255), nullable=True),
+    sa.Column('confirmed', sa.Boolean(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
+    op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=False)
+    op.create_index(op.f('ix_users_username'), 'users', ['username'], unique=False)
     op.create_table('comments',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('review_text', sa.String(), nullable=True),
     sa.Column('rate', sa.Numeric(precision=3, scale=1), nullable=False),
-    sa.Column('published_at', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('book_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['book_id'], ['books.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='SET NULL'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_comments_id'), 'comments', ['id'], unique=False)
@@ -61,6 +80,10 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_comments_rate'), table_name='comments')
     op.drop_index(op.f('ix_comments_id'), table_name='comments')
     op.drop_table('comments')
+    op.drop_index(op.f('ix_users_username'), table_name='users')
+    op.drop_index(op.f('ix_users_id'), table_name='users')
+    op.drop_index(op.f('ix_users_email'), table_name='users')
+    op.drop_table('users')
     op.drop_index(op.f('ix_books_title'), table_name='books')
     op.drop_index(op.f('ix_books_price'), table_name='books')
     op.drop_index(op.f('ix_books_is_available'), table_name='books')

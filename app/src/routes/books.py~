@@ -26,9 +26,9 @@ async def get_all_books(session: AsyncSession = Depends(db)):
     return [BookShortResponse(**book) for book in books_repository]
 
 
-# @router.get("/{book_id}")
-# async def get_book(book_id: int):
-#     pass
+@router.get("/{book_id}")
+async def get_book(book_id: int):
+    pass
 
 
 #
