@@ -9,6 +9,7 @@ from pydantic_settings import BaseSettings
 # Завантажуємо змінні середовища
 load_dotenv()
 
+
 class Settings(BaseSettings):
     db_url: str = os.getenv("DB_URL")
     secret_key: str = os.getenv("SECRET_KEY")
@@ -23,10 +24,5 @@ class Settings(BaseSettings):
     # redis_port: int = 6379
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
-
-
-print("DB_URL:", os.getenv("DB_URL"))
-print("SECRET_KEY:", os.getenv("SECRET_KEY"))
-print("ALGORITHM:", os.getenv("ALGORITHM"))
 
 settings = Settings()

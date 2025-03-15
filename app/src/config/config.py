@@ -26,8 +26,4 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
-print("DB_URL:", os.getenv("DB_URL"))
-print("SECRET_KEY:", os.getenv("SECRET_KEY"))
-print("ALGORITHM:", os.getenv("ALGORITHM"))
-
 settings = Settings()
