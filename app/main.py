@@ -1,6 +1,7 @@
 import asyncio
 
 from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -9,6 +10,18 @@ from app.src.database.db import db
 from app.src.routes import books, comments, auth
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 app.include_router(auth.router, prefix="/api")
@@ -35,6 +48,11 @@ async def startup_event():
 @app.get("/")
 async def root():
     return {"message": "Welcome to 'Eniki-Beniki' bookshop for kids."}
+
+
+@app.head("/")
+async def head_root():
+    return {}
 
 
 @app.get("/api/healthchecker")
