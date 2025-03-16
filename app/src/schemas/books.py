@@ -1,54 +1,54 @@
 from datetime import datetime
+from typing import List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
+from pydantic.alias_generators import to_camel
+import uuid
 
 
-class BookShortResponse(BaseModel):
-    id: int = Field(
-        gt=0,
-        description="The ID of the book",
-    )
-    author: str = Field(
-        min_length=1,
-        max_length=100,
-    )
-    title: str = Field(
-        min_length=1,
-        max_length=100,
-        description="The title of the book",
-    )
+class BookResponse(BaseModel):
+    book_id: uuid.UUID
+    title: str
+    author: str
+    original_title: str
+    genre: str
+    categories: List[str]
+    target_ages: List[str]
+    series: Optional[str] = None
+    publisher: str
+    publication_year: datetime
+    book_type: List[str]
+    page_count: int
+    paper_type: Optional[str] = None
+    language: str
+    original_language: str
+    translator: Optional[str] = None
+    cover_type: str
+    weight: int
+    dimensions: str
+    isbn: str
+    article_number: str
     price: float = Field(
         gt=0,
-        description="The price of the book",
     )
-    is_available: bool = Field(
-        description="The availability of the book",
+    discount: float
+    stock_quantity: int
+    description: Optional[str] = None
+    images: List[str]
+    reviews: Optional[List[str]] = None
+    is_bestseller: bool
+    is_publish: bool
+    is_gifted: bool
+    total_sales: Optional[int] = None
+    orders: List[str]
+    created_at: str
+    updated_at: str
+    rate: float = Field(ge=0, le=5)
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
     )
-    stock_quantity: int = Field(
-        ge=0,
-        description="The stock quantity of the book",
-    )
-    discount: float = Field(
-        description="The discount of the book",
-    )
-    rate: float = Field(
-        ge=0,
-        le=5,
-        description="The rate of the book",
-    )
-    comments_count: int = Field(
-        ge=0,
-        description="The number of comments of the book",
-    )
-    created_at: datetime = datetime.utcnow()
-    updated_at: datetime = datetime.utcnow()
-    age_category: int = Field(
-        ge=0,
-        description="The age category of the book",
-    )
-    # image_url: str = Field(
-    #     description="The image url of the book",
-    # )
 
     class Config:
         from_attributes = True
