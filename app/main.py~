@@ -37,7 +37,7 @@ async def check_database_health():
                 print("Healthcheck passed!")
             except Exception as e:
                 print(f"Healthcheck failed: {e}")
-        await asyncio.sleep(300)
+        await asyncio.sleep(600)
 
 
 @app.on_event("startup")
