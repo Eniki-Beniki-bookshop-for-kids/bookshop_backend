@@ -34,7 +34,7 @@ async def check_database_health():
     async with httpx.AsyncClient() as client:
         while True:
             try:
-                url = "https://your-app.onrender.com/api/healthchecker"
+                url = "https://bookshop-backend-dnzd.onrender.com"
                 response = await client.get(url)
                 print(f"Keep Alive Status: {response.status_code}")
             except Exception as e:
