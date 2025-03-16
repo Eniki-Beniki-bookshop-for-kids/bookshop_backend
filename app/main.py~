@@ -1,4 +1,5 @@
 import asyncio
+import httpx
 
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -30,14 +31,29 @@ app.include_router(comments.router, prefix="/comments")
 
 
 async def check_database_health():
-    while True:
-        async with session_manager.session() as session:
+    async with httpx.AsyncClient() as client:  # Створюємо асинхронний HTTP-клієнт
+        while True:
+            async with session_manager.session() as session:
+                try:
+                    # Виконання запиту до бази даних
+                    result = await session.execute(text("SELECT 1"))
+                    if not result.fetchone():
+                        print("⚠️ Database is not configured correctly!")
+                    else:
+                        print("✅ Database is healthy!")
+                except Exception as e:
+                    print(f"❌ Database connection error: {e}")
+
             try:
-                await healthchecker(session)
-                print("Healthcheck passed!")
+                # Keep Alive: робимо асинхронний GET-запит до API
+                url = "https://your-app.onrender.com/api/healthchecker"
+                response = await client.get(url)  # Асинхронний HTTP-запит
+                print(f"🔄 Keep Alive Status: {response.status_code}")
             except Exception as e:
-                print(f"Healthcheck failed: {e}")
-        await asyncio.sleep(600)
+                print(f"❌ Keep Alive Failed: {e}")
+
+            print("⏳ Sleeping for 300 seconds...")
+            await asyncio.sleep(300)
 
 
 @app.on_event("startup")

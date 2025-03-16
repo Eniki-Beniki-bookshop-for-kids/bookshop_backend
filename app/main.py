@@ -1,4 +1,5 @@
 import asyncio
+import httpx
 
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -30,14 +31,15 @@ app.include_router(comments.router, prefix="/comments")
 
 
 async def check_database_health():
-    while True:
-        async with session_manager.session() as session:
+    async with httpx.AsyncClient() as client:
+        while True:
             try:
-                await healthchecker(session)
-                print("Healthcheck passed!")
+                url = "https://your-app.onrender.com/api/healthchecker"
+                response = await client.get(url)
+                print(f"Keep Alive Status: {response.status_code}")
             except Exception as e:
-                print(f"Healthcheck failed: {e}")
-        await asyncio.sleep(300)
+                print(f"Keep Alive Failed: {e}")
+            await asyncio.sleep(150)
 
 
 @app.on_event("startup")
