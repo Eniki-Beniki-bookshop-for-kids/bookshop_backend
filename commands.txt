@@ -11,6 +11,7 @@ docker-compose up --build -d
 alembic init migrations
 
 alembic revision --autogenerate -m "Initial migration"
+alembic revision --autogenerate -m "initial create tables books_users_reviews"
 alembic upgrade head
 
 --------------------------------------

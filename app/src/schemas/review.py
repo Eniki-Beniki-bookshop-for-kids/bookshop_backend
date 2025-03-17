@@ -14,6 +14,7 @@ class ReviewModel(BaseModel):
     model_config = ConfigDict(
         alias_generator=to_camel,
         populate_by_name=True,
+        arbitrary_types_allowed=True,
     )
 
 

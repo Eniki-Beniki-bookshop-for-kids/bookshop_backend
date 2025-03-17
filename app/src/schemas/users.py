@@ -11,7 +11,7 @@ from app.src.entity.enums import UserRole
 class UserModel(BaseModel):
     username: str = Field(min_length=5, max_length=100)
     email: EmailStr
-    password: str = Field(min_length=6, max_length=50)
+    password: str = Field(min_length=6, max_length=255)
 
 
 class UserResponse(BaseModel):
@@ -38,10 +38,9 @@ class UserResponse(BaseModel):
     model_config = ConfigDict(
         alias_generator=to_camel,
         populate_by_name=True,
+        from_attributes=True,
+        arbitrary_types_allowed=True,
     )
-
-    class Config:
-        from_attributes = True
 
 
 class TokenModel(BaseModel):

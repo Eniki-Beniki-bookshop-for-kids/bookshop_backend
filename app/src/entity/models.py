@@ -1,5 +1,4 @@
 import uuid
-import enum
 from sqlalchemy import (
     Column,
     Integer,
@@ -86,7 +85,7 @@ class Book(Base):
     )
     title = Column(String(250), index=True, nullable=False)
     author = Column(String(100), index=True, nullable=False)
-    genre = Column(Enum(enums.Genre), nullable=False, default=enums.Genre.other)
+    genre = Column(Enum(enums.Genre), nullable=False, server_default="other_genre")
     categories = relationship(
         "Category", back_populates="book", cascade="all, delete-orphan"
     )
@@ -146,14 +145,14 @@ class BookInfo(Base):
     original_title = Column(String(250), index=True, nullable=True)
     series = Column(String(200), nullable=True)
     publisher = Column(String(200), nullable=True, index=True)
-    publication_year = Column(DateTime, nullable=True)
+    publication_year = Column(Integer, nullable=True)
     page_count = Column(Integer, nullable=True)
     paper_type = Column(Enum(enums.PaperType), nullable=True, index=True)
     translator = Column(String(100), index=True, nullable=True)
     cover_type = Column(Enum(enums.CoverType), nullable=True, index=True)
     weight = Column(Numeric(5, 2), nullable=True)
     dimensions = Column(String(20), nullable=True)
-    isbn = Column(String(50), nullable=True)
+    isbn = Column(String(50), nullable=True, unique=True)
     article_number = Column(String(50), nullable=True)
     description = Column(String(1500), nullable=True)
 
@@ -210,15 +209,17 @@ class User(Base):
     city = Column(String(200))
     postal_code = Column(String(50))
     country = Column(String(50))
-    role = Column(Enum(enums.UserRole), nullable=False, default=enums.UserRole.user)
+    role = Column(Enum(enums.UserRole), nullable=False, server_default="user")
     google_id = Column(String(255), unique=True, nullable=True)
     google_access_token = Column(String(512), nullable=True)
     avatar = Column(String(255), nullable=True)
     is_active = Column(Boolean, default=True)
 
     created_at = Column(DateTime, default=func.now())
-    updated_at = Column(DateTime, default=func.now())
-    password = Column(String(50), nullable=False)
+    updated_at = Column(
+        DateTime, default=func.now(), onupdate=func.now(), nullable=False
+    )
+    password = Column(String(255), nullable=False)
     refresh_token = Column(String(255), nullable=True)
     is_confirmed = Column(Boolean, default=False)
 
