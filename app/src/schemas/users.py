@@ -16,7 +16,7 @@ class UserModel(BaseModel):
 
 class UserResponse(BaseModel):
     user_id: uuid.UUID
-    email: EmailStr
+    email: EmailStr = Field(max_length=250)
     first_name: str = Field(min_length=2, max_length=100)
     last_name: str = Field(max_length=100)
     phone_number: str = Field(max_length=50)
@@ -28,8 +28,9 @@ class UserResponse(BaseModel):
     role: UserRole
     google_id: Optional[str] = None
     google_access_token: Optional[str] = None
-    avatar: str
+    avatar: str = Field(max_length=255)
     is_active: bool
+    # is_confirmed: bool
     favorite_books: Optional[List[str]] = None
     created_at: datetime
     updated_at: datetime
