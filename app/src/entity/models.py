@@ -28,7 +28,7 @@ class Category(Base):
         nullable=False,
     )
     book_id = Column(UUID(as_uuid=True), ForeignKey("books.id"), nullable=False)
-    category = Column(Enum(enums.Categories), nullable=False, index=True)
+    category = Column(Enum(enums.CategoriesEnum), nullable=False, index=True)
     book = relationship("Book", back_populates="categories")
 
 
@@ -42,7 +42,7 @@ class TargetAge(Base):
         nullable=False,
     )
     book_id = Column(UUID(as_uuid=True), ForeignKey("books.id"), nullable=False)
-    target_age = Column(Enum(enums.TargetAges), nullable=False, index=True)
+    target_age = Column(Enum(enums.TargetAgesEnum), nullable=False, index=True)
     book = relationship("Book", back_populates="target_ages")
 
 
@@ -56,7 +56,7 @@ class BookType(Base):
         nullable=False,
     )
     book_id = Column(UUID(as_uuid=True), ForeignKey("books.id"), nullable=False)
-    target_age = Column(Enum(enums.BookType), nullable=False, index=True)
+    book_type = Column(Enum(enums.BookTypeEnum), nullable=False, index=True)
     book = relationship("Book", back_populates="book_types")
 
 
@@ -85,7 +85,7 @@ class Book(Base):
     )
     title = Column(String(250), index=True, nullable=False)
     author = Column(String(100), index=True, nullable=False)
-    genre = Column(Enum(enums.Genre), nullable=False, server_default="other_genre")
+    genre = Column(Enum(enums.GenreEnum), nullable=False, server_default="other_genre")
     categories = relationship(
         "Category", back_populates="book", cascade="all, delete-orphan"
     )
@@ -95,8 +95,8 @@ class Book(Base):
     book_types = relationship(
         "BookType", back_populates="book", cascade="all, delete-orphan"
     )
-    language = Column(Enum(enums.Language), nullable=False, index=True)
-    original_language = Column(Enum(enums.Language), nullable=False, index=True)
+    language = Column(Enum(enums.LanguageEnum), nullable=False, index=True)
+    original_language = Column(Enum(enums.LanguageEnum), nullable=False, index=True)
     price = Column(Numeric, index=True, nullable=False, default=0.0)
     discount = Column(Numeric(4, 2), index=True, nullable=False, default=0.0)
     stock_quantity = Column(Integer, nullable=False, default=1)
@@ -147,15 +147,20 @@ class BookInfo(Base):
     publisher = Column(String(200), nullable=True, index=True)
     publication_year = Column(Integer, nullable=True)
     page_count = Column(Integer, nullable=True)
-    paper_type = Column(Enum(enums.PaperType), nullable=True, index=True)
+    paper_type = Column(Enum(enums.PaperTypeEnum), nullable=True, index=True)
     translator = Column(String(100), index=True, nullable=True)
-    cover_type = Column(Enum(enums.CoverType), nullable=True, index=True)
+    cover_type = Column(Enum(enums.CoverTypeEnum), nullable=True, index=True)
     weight = Column(Numeric(5, 2), nullable=True)
     dimensions = Column(String(20), nullable=True)
     isbn = Column(String(50), nullable=True, unique=True)
     article_number = Column(String(50), nullable=True)
     description = Column(String(1500), nullable=True)
-
+    book_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("books.id", ondelete="CASCADE"),
+        unique=True,
+        nullable=False,
+    )
     book = relationship("Book", back_populates="book_info")
 
 
@@ -209,7 +214,7 @@ class User(Base):
     city = Column(String(200))
     postal_code = Column(String(50))
     country = Column(String(50))
-    role = Column(Enum(enums.UserRole), nullable=False, server_default="user")
+    role = Column(Enum(enums.UserRoleEnum), nullable=False, server_default="user")
     google_id = Column(String(255), unique=True, nullable=True)
     google_access_token = Column(String(512), nullable=True)
     avatar = Column(String(255), nullable=True)

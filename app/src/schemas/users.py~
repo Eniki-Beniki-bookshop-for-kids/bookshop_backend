@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from pydantic.alias_generators import to_camel
 import uuid
 
-from app.src.entity import enums
+from app.src.entity.enums import UserRole
 
 
 class UserModel(BaseModel):
@@ -25,7 +25,7 @@ class UserResponse(BaseModel):
     city: str = Field(max_length=200)
     postal_code: str = Field(max_length=50)
     country: str = Field(max_length=50)
-    role: enums.UserRoleEnum
+    role: UserRole
     google_id: Optional[str] = None
     google_access_token: Optional[str] = None
     avatar: str = Field(max_length=255)

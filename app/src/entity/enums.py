@@ -1,7 +1,7 @@
 import enum
 
 
-class Genre(enum.Enum):
+class GenreEnum(enum.Enum):
     classics: str = "Класика"
     fantasy: str = "Фантастика"
     science_fiction: str = "Наука-фантастика"
@@ -20,7 +20,7 @@ class Genre(enum.Enum):
     other_genre: str = "Інше"
 
 
-class Language(enum.Enum):
+class LanguageEnum(enum.Enum):
     ukrainian: str = "Українська"
     english: str = "Англійська"
     russian: str = "Російська"
@@ -42,19 +42,19 @@ class Language(enum.Enum):
     other_language: str = "Інша мова"
 
 
-class BookType(enum.Enum):
+class BookTypeEnum(enum.Enum):
     paperback: str = "Паперова книга"
     Ebook: str = "Електронна книга"
     audiobook: str = "Аудіокнига"
 
 
-class CoverType(enum.Enum):
+class CoverTypeEnum(enum.Enum):
     hard: str = "Тверда"
     soft: str = "М’яка"
     spiral: str = "Спиральна"
 
 
-class PaperType(enum.Enum):
+class PaperTypeEnum(enum.Enum):
     offset: str = "Офсетний папір"
     newsprint: str = "Газетний папір"
     writing: str = "Письмовий папір"
@@ -63,13 +63,13 @@ class PaperType(enum.Enum):
     cardboard: str = "Картон"
 
 
-class UserRole(enum.Enum):
+class UserRoleEnum(enum.Enum):
     admin: str = "Admin"
     superadmin: str = "SuperAdmin"
     user: str = "User"
 
 
-class Categories(enum.Enum):
+class CategoriesEnum(enum.Enum):
     children_literature: str = "Дитяча література"
     young_adult: str = "Для підлітків"
     adult_literature: str = "Для дорослих"
@@ -77,7 +77,7 @@ class Categories(enum.Enum):
     other_category: str = "Інша категорія"
 
 
-class TargetAges(enum.Enum):
+class TargetAgesEnum(enum.Enum):
     age_1_3: str = "1-3"
     age_3_5: str = "3-5"
     age_5_8: str = "5-8"
@@ -85,88 +85,3 @@ class TargetAges(enum.Enum):
     teenager: str = "Підліткам"
     adult: str = "Дорослим"
     other_target: str = "Інше"
-
-
-#
-# genre_enum = sa.Enum(
-#     "classics",
-#     "fantasy",
-#     "science_fiction",
-#     "mystery",
-#     "romance",
-#     "non_fiction",
-#     "coloring",
-#     "fairy_tales",
-#     "biography",
-#     "history",
-#     "poetry",
-#     "self_help",
-#     "business",
-#     "travel",
-#     "cooking",
-#     "other_genre",
-#     name="genre_enum",
-# )
-# language_enum = sa.Enum(
-#     "ukrainian",
-#     "english",
-#     "russian",
-#     "german",
-#     "french",
-#     "spanish",
-#     "italian",
-#     "polish",
-#     "chinese",
-#     "japanese",
-#     "arabic",
-#     "turkish",
-#     "portuguese",
-#     "dutch",
-#     "swedish",
-#     "latin",
-#     "greek",
-#     "hebrew",
-#     "other_language",
-#     name="language_enum",
-# )
-# paper_type_enum = sa.Enum(
-#     "offset",
-#     "newsprint",
-#     "writing",
-#     "coated",
-#     "vellum",
-#     "cardboard",
-#     name="paper_type_enum",
-# )
-# cover_type_enum = sa.Enum("hard", "soft", "spiral", name="cover_type_enum")
-# user_role_enum = sa.Enum("admin", "superadmin", "user", name="user_role_enum")
-# categories_enum = sa.Enum(
-#     "children_literature",
-#     "young_adult",
-#     "adult_literature",
-#     "parents",
-#     "other_category",
-#     name="categories_enum",
-# )
-# target_ages_enum = sa.Enum(
-#     "age_1_3",
-#     "age_3_5",
-#     "age_5_8",
-#     "age_8_12",
-#     "teenager",
-#     "adult",
-#     "other_target",
-#     name="target_ages_enum",
-# )
-#
-# booktype_enum = sa.Enum("paperback", "Ebook", "audiobook", name="booktype_enum")
-#
-# # drop enums
-# categories_enum.drop(op.get_bind(), checkfirst=True)
-# cover_type_enum.drop(op.get_bind(), checkfirst=True)
-# language_enum.drop(op.get_bind(), checkfirst=True)
-# genre_enum.drop(op.get_bind(), checkfirst=True)
-# paper_type_enum.drop(op.get_bind(), checkfirst=True)
-# target_ages_enum.drop(op.get_bind(), checkfirst=True)
-# user_role_enum.drop(op.get_bind(), checkfirst=True)
-# booktype_enum.drop(op.get_bind(), checkfirst=True)

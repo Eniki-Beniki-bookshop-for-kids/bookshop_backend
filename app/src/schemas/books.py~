@@ -64,9 +64,7 @@ class BookResponse(BaseModel):
     images: Optional[List[str]] = Field(
         description="Масив URL-адрес до фотографій книги"
     )
-    reviews: Optional[List] = Field(
-        description="Масив відгуків юзерів і критиків про книгу"
-    )
+    reviews: Optional[List] = Field(description="Масив відгуків юзерів і критиків про книгу")
     is_bestseller: bool = Field(description="Чи є книга бестселером?")
     is_publish: bool = Field(description="Чи доступна книга для продажу?")
     is_gifted: bool = Field(description="Чи подарункове видання?")

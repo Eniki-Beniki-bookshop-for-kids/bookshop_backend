@@ -1,27 +1,154 @@
+from typing import List
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import and_, func, select
 
-from app.src.entity.models import Book, Review
+from app.src.entity.models import (
+    Book,
+    Review,
+    BookInfo,
+    Category,
+    TargetAge,
+    BookType,
+    Image,
+    User,
+)
+from app.src.schemas.books import BookResponse
+from app.src.schemas.review import ReviewResponse
+
 
 #
-# async def get_all_books(session: AsyncSession):
-#     query = (
-#         select(
-#             Book.id,
-#             Book.author,
-#             Book.title,
-#             Book.price,
-#             Book.is_available,
-#             Book.stock_quantity,
-#             Book.discount,
-#             func.coalesce(func.avg(Comment.rate), 0).label("rate"),
-#             func.count(Comment.id).label("comments_count"),
-#             Book.created_at,
-#             Book.updated_at,
-#             Book.age_category,
-#         )
-#         .outerjoin(Comment, Comment.book_id == Book.id)
-#         .group_by(Book.id)
-#     )
-#     books = await session.execute(query)
-#     return books.mappings().all()
+async def get_all_books(session: AsyncSession) -> List[BookResponse]:
+    query = (
+        select(
+            Book.id,
+            Book.author,
+            Book.title,
+            BookInfo.original_title,
+            Book.genre,
+            func.array_agg(Category.category).label("categories"),
+            func.array_agg(TargetAge.target_age).label("target_ages"),
+            BookInfo.series,
+            BookInfo.publisher,
+            BookInfo.publication_year,
+            func.array_agg(BookType.book_type).label("book_type"),
+            BookInfo.page_count,
+            BookInfo.paper_type,
+            Book.language,
+            Book.original_language,
+            BookInfo.translator,
+            BookInfo.cover_type,
+            BookInfo.weight,
+            BookInfo.dimensions,
+            BookInfo.isbn,
+            BookInfo.article_number,
+            Book.price,
+            Book.discount,
+            Book.stock_quantity,
+            BookInfo.description,
+            func.array_agg(Image.image_url).label("images"),
+            func.jsonb_agg(
+                func.json_build_object(
+                    "book_id",
+                    Review.book_id,
+                    "review_text",
+                    Review.review_text,
+                    "rate",
+                    Review.rate,
+                    "review_date",
+                    Review.review_date,
+                    "id",
+                    Review.id,
+                    "user_id",
+                    Review.user_id,
+                    "review_name",
+                    User.first_name,
+                    "avatar",
+                    User.last_name,
+                    "created_at",
+                    Review.created_at,
+                    "updated_at",
+                    Review.updated_at,
+                )
+            ).label("reviews"),
+            Book.is_bestseller,
+            Book.is_publish,
+            Book.is_gifted,
+            Book.is_available,
+            Book.created_at,
+            Book.updated_at,
+            func.coalesce(func.avg(Review.rate), 0).label("rate"),
+        )
+        .outerjoin(Review, Review.book_id == Book.id)
+        .join(User, User.id == Review.user_id)
+        .outerjoin(BookInfo, BookInfo.book_id == Book.id)
+        .outerjoin(Category, Category.book_id == Book.id)
+        .outerjoin(TargetAge, TargetAge.book_id == Book.id)
+        .outerjoin(BookType, BookType.book_id == Book.id)
+        .outerjoin(Image, Image.book_id == Book.id)
+        .group_by(
+            Book.id,
+            BookInfo.original_title,
+            BookInfo.series,
+            BookInfo.publisher,
+            BookInfo.publication_year,
+            BookInfo.page_count,
+            BookInfo.paper_type,
+            BookInfo.translator,
+            BookInfo.cover_type,
+            BookInfo.weight,
+            BookInfo.dimensions,
+            BookInfo.isbn,
+            BookInfo.article_number,
+            BookInfo.description,
+        )
+    )
+
+    books_result = await session.execute(query)
+    books = books_result.mappings().all()
+
+    book_responses = [
+        BookResponse(
+            book_id=book["id"],
+            title=book["title"],
+            author=book["author"],
+            original_title=book["original_title"],
+            genre=book["genre"],
+            categories=[c for c in book["categories"] if c is not None],
+            target_ages=[t for t in book["target_ages"] if t is not None],
+            series=book["series"],
+            publisher=book["publisher"],
+            publication_year=book["publication_year"],
+            book_type=[b for b in book["book_type"] if b is not None],
+            page_count=book["page_count"],
+            paper_type=book["paper_type"],
+            language=book["language"],
+            original_language=book["original_language"],
+            translator=book["translator"],
+            cover_type=book["cover_type"],
+            weight=book["weight"],
+            dimensions=book["dimensions"],
+            isbn=book["isbn"],
+            article_number=book["article_number"],
+            price=book["price"],
+            discount=book["discount"],
+            stock_quantity=book["stock_quantity"],
+            description=book["description"],
+            images=[i for i in book["images"] if i is not None],
+            reviews=(
+                [r for r in book["reviews"] if r is not None] if book["reviews"] else []
+            ),
+            is_bestseller=book["is_bestseller"],
+            is_publish=book["is_publish"],
+            is_gifted=book["is_gifted"],
+            is_available=book["is_available"],
+            total_sales=None,  # Якщо потрібно, можна отримати окремим запитом
+            orders=None,
+            created_at=book["created_at"],
+            updated_at=book["updated_at"],
+            rate=book["rate"],
+        )
+        for book in books
+    ]
+
+    return book_responses

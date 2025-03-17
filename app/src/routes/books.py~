@@ -22,4 +22,4 @@ async def get_all_books(session: AsyncSession = Depends(db)):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Not found any book"
         )
-    return books_repository
+    return [BookResponse(**book) for book in books_repository]
