@@ -1,12 +1,12 @@
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, Field, ConfigDict
+from fastapi import HTTPException
+from pydantic import BaseModel, Field, ConfigDict, field_validator
 from pydantic.alias_generators import to_camel
 import uuid
 
 from app.src.entity import enums
-from app.src.schemas.review import ReviewResponse
 
 
 class BookResponse(BaseModel):
@@ -52,6 +52,9 @@ class BookResponse(BaseModel):
         description="Артикул або внутрішній ідентифікатор книги",
     )
     price: float = Field(ge=0, description="Ціна книги в гривні")
+    actual_price: float = Field(
+        ge=0, description="Ціна книги в гривні з урахуванням знижки"
+    )
     discount: float = Field(
         ge=0, le=1, description="Знижка на книгу (0.0 <= коеф <= 1.0)"
     )
@@ -64,7 +67,9 @@ class BookResponse(BaseModel):
     images: Optional[List[str]] = Field(
         description="Масив URL-адрес до фотографій книги"
     )
-    reviews: Optional[List] = Field(description="Масив відгуків юзерів і критиків про книгу")
+    reviews: Optional[List] = Field(
+        description="Масив відгуків юзерів і критиків про книгу"
+    )
     is_bestseller: bool = Field(description="Чи є книга бестселером?")
     is_publish: bool = Field(description="Чи доступна книга для продажу?")
     is_gifted: bool = Field(description="Чи подарункове видання?")
@@ -83,3 +88,83 @@ class BookResponse(BaseModel):
         from_attributes=True,
         arbitrary_types_allowed=True,
     )
+
+
+class BookPaginationResponse(BaseModel):
+    total_books: int
+    total_pages: int
+    current_page: int
+    limit: int
+    offset: int
+    books: List[BookResponse]
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+        arbitrary_types_allowed=True,
+    )
+
+
+class BookFilterParams(BaseModel):
+    author: Optional[str] = Field(default=None, description="Фільтр за ім'ям автора")
+    title: Optional[str] = Field(default=None, description="Фільтр за назвою книги")
+    genre: Optional[str] = Field(default=None, description="Фільтр за жанром книги")
+    paper_type: Optional[str] = Field(
+        default=None, description="Фільтр за типом паперу"
+    )
+    language: Optional[str] = Field(
+        default=None,
+        description="Фільтр за мовою книги",
+    )
+    cover_type: Optional[str] = Field(
+        default=None,
+        description="Фільтр типом обкладинки",
+    )
+    discount_min: Optional[float] = Field(
+        None, ge=0, le=1, description="min поріг знижки"
+    )
+    discount_max: Optional[float] = Field(
+        None, ge=0, le=1, description="max поріг знижки"
+    )
+    actual_price_min: Optional[float] = Field(None, ge=0, description="min поріг actual_price")
+    actual_price_max: Optional[float] = Field(None, ge=0, description="max поріг actual_price")
+    created_at_after: Optional[str] = Field(
+        None, description="Filter by creation date after"
+    )
+    created_at_before: Optional[str] = Field(
+        None, description="Filter by creation date before"
+    )
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+        arbitrary_types_allowed=True,
+    )
+
+    @field_validator("created_at_after", "created_at_before", mode="before")
+    @classmethod
+    def validate_date(cls, value):
+        if value is None:
+            return value
+
+        if isinstance(value, int) or (
+            isinstance(value, str) and value.isdigit() and len(value) == 4
+        ):
+            return f"{int(value)}-01-01"
+
+        if isinstance(value, str):
+            try:
+                parsed_date = datetime.strptime(value, "%Y-%m-%d")
+                return parsed_date.strftime("%Y-%m-%d")
+            except ValueError:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Invalid date format: '{value}'. Use 'YYYY-MM-DD' (e.g., '2024-03-20') or 'YYYY' (e.g., '2000').",
+                )
+
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid date type: {type(value).__name__}. Must be string (YYYY-MM-DD) or integer (year).",
+        )

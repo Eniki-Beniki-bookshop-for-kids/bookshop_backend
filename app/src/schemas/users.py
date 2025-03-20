@@ -13,6 +13,13 @@ class UserModel(BaseModel):
     email: EmailStr
     password: str = Field(min_length=6, max_length=255)
 
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+        arbitrary_types_allowed=True,
+    )
+
 
 class UserResponse(BaseModel):
     user_id: uuid.UUID
@@ -47,3 +54,10 @@ class TokenModel(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+        arbitrary_types_allowed=True,
+    )

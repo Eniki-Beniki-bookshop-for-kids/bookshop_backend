@@ -1,7 +1,7 @@
 from datetime import datetime
 import uuid
 
-from pydantic import BaseModel, Field, ConfigDict, EmailStr
+from pydantic import BaseModel, Field, ConfigDict
 from pydantic.alias_generators import to_camel
 
 
@@ -25,3 +25,10 @@ class ReviewResponse(ReviewModel):
     avatar: str = Field(description="Посилання на аватар")
     created_at: datetime = Field(description="Дата створення")
     updated_at: datetime = Field(description="Дата оновлення")
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+        arbitrary_types_allowed=True,
+    )
