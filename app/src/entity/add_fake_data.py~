@@ -1,0 +1,101 @@
+import traceback
+import uuid
+from datetime import datetime
+import random
+
+from sqlalchemy.ext.asyncio import AsyncSession
+from faker import Faker
+
+from app.src.database.db import db
+from app.src.entity import enums
+from app.src.entity.models import Book, BookInfo, Category, TargetAge, BookType, Image
+
+from app.src.entity.book_names import titles_list, authors_list
+
+
+fake = Faker("uk-UA")
+
+
+async def populate_database(session: AsyncSession, title, author):
+
+    try:
+        book1 = Book(
+            id=uuid.uuid4(),
+            title=title[:250],
+            author=author,
+            genre=random.choice(list(enums.GenreEnum)),
+            language=random.choice(list(enums.LanguageEnum)),
+            original_language=random.choice(list(enums.LanguageEnum)),
+            price=random.randint(100, 1000),
+            discount=round(random.uniform(0, 1), 2),
+            stock_quantity=random.randint(20, 100),
+            is_bestseller=random.choice([True, False]),
+            is_publish=random.choice([True, False]),
+            is_gifted=random.choice([True, False]),
+            is_available=True,
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow(),
+        )
+        session.add(book1)
+
+        book_info1 = BookInfo(
+            id=uuid.uuid4(),
+            original_title=book1.title,
+            series=f"Серія {random.randint(1, 100)}",
+            publisher=fake.sentence(10)[:200],
+            publication_year=2022,
+            page_count=random.choice([random.randint(50, 500), None]),
+            paper_type=random.choice(list(enums.PaperTypeEnum)),
+            translator=random.choice([fake.full_name(), None]),
+            cover_type=random.choice(list(enums.CoverTypeEnum)),
+            weight=random.randint(100, 1000),
+            dimensions=f"{random.randint(100, 300)}x{random.randint(200, 400)} мм",
+            isbn=f"{random.randint(100, 999)}-{random.randint(0, 9)}-{random.randint(10, 99)}-{random.randint(10000, 99999)}-{random.randint(0, 9)}",
+            article_number=fake.sentence(50)[:50],
+            description=fake.sentence(random.randint(100, 500))[:1500],
+            book_id=book1.id,
+        )
+        session.add(book_info1)
+
+        for _ in range(random.randint(1, 3)):
+            category1 = Category(
+                id=uuid.uuid4(),
+                book_id=book1.id,
+                category=random.choice(list(enums.CategoriesEnum)),
+            )
+            session.add(category1)
+
+        for _ in range(random.randint(1, 4)):
+            age_group1 = TargetAge(
+                id=uuid.uuid4(),
+                book_id=book1.id,
+                target_age=random.choice(list(enums.TargetAgesEnum)),
+            )
+            session.add(age_group1)
+
+        for _ in range(random.randint(1, 3)):
+            book_type1 = BookType(
+                id=uuid.uuid4(),
+                book_id=book1.id,
+                book_type=random.choice(list(enums.BookTypeEnum)),
+            )
+            session.add(book_type1)
+
+        await session.commit()
+
+    except Exception as e:
+        print(e)
+        print(traceback.format_exc())
+        await session.rollback()
+
+
+async def main():
+    async for session in db():
+        for title, author in map(titles_list, authors_list):
+            await populate_database(session, title, author)
+
+
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.run(main())
