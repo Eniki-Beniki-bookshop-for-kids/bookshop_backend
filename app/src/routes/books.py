@@ -39,20 +39,21 @@ async def get_all_books(
     categories: str = Query(
         None,
         alias="categories",
-        description="Фільтр за категоріями (рядок, розділений комами)",
+        description="Фільтр за категоріями (Дитяча література, Для підлітків, Для дорослих, Для батьків, "
+        "Інша категорія)(рядок, розділений комами)",
     ),
     target_ages: str = Query(
         None,
         alias="targetAges",
-        description="Фільтр за масивом цільових вікових груп (рядок, розділений комами)",
+        description="Фільтр за масивом цільових вікових груп (1-3, 3-5, 5-8, 8-12, Підліткам, Дорослим, Інше) (рядок, "
+        "розділений комами)",
     ),
     book_type: str = Query(
         None,
         alias="bookType",
-        description="Фільтр за типом книги (електрона, аудіо, паперова)(рядок, розділений комами)",
+        description="Фільтр за типом книги (Електронна книга, Аудіокнига, Паперова книга)(рядок, розділений комами)",
     ),
 ):
-
     filter_params_dict = filter_params.dict()
     filter_params_dict["sort_by"] = camel_to_snake(sort_by)
     filter_params_dict["sort_order"] = sort_order

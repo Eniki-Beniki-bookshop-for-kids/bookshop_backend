@@ -199,6 +199,8 @@ class SortFilter(Filter):
         sort_column = sort_mapping.get(
             self.sort_by, self.actual_price_subquery.c.actual_price
         )
+        print(f"--------sort_by----{self.sort_by}")
+        print(f"--------sort_column----{sort_column}")
         if self.sort_by == "actual_price":
             sort_column = self.actual_price_subquery.c.actual_price
 
