@@ -1,0 +1,1107 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "FastAPI",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/auth/signup": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Signup",
+        "operationId": "signup_api_auth_signup_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login",
+        "operationId": "login_api_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_login_api_auth_login_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/refresh_token": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Refresh Token",
+        "operationId": "refresh_token_api_auth_refresh_token_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/products/books/": {
+      "get": {
+        "tags": [
+          "books"
+        ],
+        "summary": "Get All Books",
+        "operationId": "get_all_books_products_books__get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 10,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "author",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Author"
+            }
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Title"
+            }
+          },
+          {
+            "name": "genre",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Genre"
+            }
+          },
+          {
+            "name": "categories",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Categories"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookPaginationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Root",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "summary": "Head Root",
+        "operationId": "head_root__head",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/healthchecker": {
+      "get": {
+        "summary": "Healthchecker",
+        "operationId": "healthchecker_api_healthchecker_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Body_login_api_auth_login_post": {
+        "properties": {
+          "grant_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^password$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grant Type"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          },
+          "scope": {
+            "type": "string",
+            "title": "Scope",
+            "default": ""
+          },
+          "client_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Id"
+          },
+          "client_secret": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Secret"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "Body_login_api_auth_login_post"
+      },
+      "BookPaginationResponse": {
+        "properties": {
+          "totalBooks": {
+            "type": "integer",
+            "title": "Totalbooks"
+          },
+          "totalPages": {
+            "type": "integer",
+            "title": "Totalpages"
+          },
+          "currentPage": {
+            "type": "integer",
+            "title": "Currentpage"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset"
+          },
+          "books": {
+            "items": {
+              "$ref": "#/components/schemas/BookResponse"
+            },
+            "type": "array",
+            "title": "Books"
+          }
+        },
+        "type": "object",
+        "required": [
+          "totalBooks",
+          "totalPages",
+          "currentPage",
+          "limit",
+          "offset",
+          "books"
+        ],
+        "title": "BookPaginationResponse"
+      },
+      "BookResponse": {
+        "properties": {
+          "bookId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Bookid"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 250,
+            "title": "Title",
+            "description": "Назва книги"
+          },
+          "author": {
+            "type": "string",
+            "maxLength": 100,
+            "title": "Author",
+            "description": "Автор книги"
+          },
+          "originalTitle": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 250
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Originaltitle",
+            "description": "Оригінальна назва книги"
+          },
+          "genre": {
+            "$ref": "#/components/schemas/GenreEnum",
+            "description": "Жанр книги"
+          },
+          "categories": {
+            "items": {
+              "$ref": "#/components/schemas/CategoriesEnum"
+            },
+            "type": "array",
+            "title": "Categories",
+            "description": "Масив цільових аудиторій книги"
+          },
+          "targetAges": {
+            "items": {
+              "$ref": "#/components/schemas/TargetAgesEnum"
+            },
+            "type": "array",
+            "title": "Targetages",
+            "description": "Масив цільових вікових груп"
+          },
+          "series": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Series"
+          },
+          "publisher": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publisher",
+            "description": "Видавництво, що випустило книгу"
+          },
+          "publicationYear": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publicationyear"
+          },
+          "bookType": {
+            "items": {
+              "$ref": "#/components/schemas/BookTypeEnum"
+            },
+            "type": "array",
+            "title": "Booktype",
+            "description": "Типи книги в наявності"
+          },
+          "pageCount": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pagecount",
+            "description": "Кількість сторінок у книзі"
+          },
+          "paperType": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PaperTypeEnum"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Тип паперу"
+          },
+          "language": {
+            "$ref": "#/components/schemas/LanguageEnum",
+            "description": "Мова перекладу або тексту книги"
+          },
+          "originalLanguage": {
+            "$ref": "#/components/schemas/LanguageEnum",
+            "description": "Мова оригіналу книги"
+          },
+          "translator": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Translator",
+            "description": "Особа, яка перекладала"
+          },
+          "coverType": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CoverTypeEnum"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Тип обкладинки книги"
+          },
+          "weight": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weight",
+            "description": "Вага книги в грамах"
+          },
+          "dimensions": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 20
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dimensions",
+            "description": "Розміри книги у форматі 'ширина x висота' в міліметрах"
+          },
+          "isbn": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 50
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Isbn",
+            "description": "Міжнародний стандартний номер книги"
+          },
+          "articleNumber": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 50
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Articlenumber",
+            "description": "Артикул або внутрішній ідентифікатор книги"
+          },
+          "price": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Price",
+            "description": "Ціна книги в гривні"
+          },
+          "discount": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Discount",
+            "description": "Знижка на книгу (0.0 <= коеф <= 1.0)"
+          },
+          "stockQuantity": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Stockquantity",
+            "description": "Кількість книг на складі, доступних для продажу (>= 0)"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Короткий або детальний опис книги"
+          },
+          "images": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Images",
+            "description": "Масив URL-адрес до фотографій книги"
+          },
+          "reviews": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reviews",
+            "description": "Масив відгуків юзерів і критиків про книгу"
+          },
+          "isBestseller": {
+            "type": "boolean",
+            "title": "Isbestseller",
+            "description": "Чи є книга бестселером?"
+          },
+          "isPublish": {
+            "type": "boolean",
+            "title": "Ispublish",
+            "description": "Чи доступна книга для продажу?"
+          },
+          "isGifted": {
+            "type": "boolean",
+            "title": "Isgifted",
+            "description": "Чи подарункове видання?"
+          },
+          "isAvailable": {
+            "type": "boolean",
+            "title": "Isavailable",
+            "description": "Чи доступна для продажу?"
+          },
+          "totalSales": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Totalsales"
+          },
+          "orders": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Orders"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat",
+            "description": "Дата створення запису про книгу"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updatedat",
+            "description": "Дата останнього оновлення запису"
+          },
+          "rate": {
+            "type": "number",
+            "maximum": 5.0,
+            "minimum": 0.0,
+            "title": "Rate",
+            "description": "Середня оцінка відгуків по книзі"
+          }
+        },
+        "type": "object",
+        "required": [
+          "bookId",
+          "title",
+          "author",
+          "originalTitle",
+          "genre",
+          "categories",
+          "targetAges",
+          "publisher",
+          "publicationYear",
+          "bookType",
+          "pageCount",
+          "paperType",
+          "language",
+          "originalLanguage",
+          "translator",
+          "coverType",
+          "weight",
+          "dimensions",
+          "isbn",
+          "articleNumber",
+          "price",
+          "discount",
+          "stockQuantity",
+          "description",
+          "images",
+          "reviews",
+          "isBestseller",
+          "isPublish",
+          "isGifted",
+          "isAvailable",
+          "createdAt",
+          "updatedAt",
+          "rate"
+        ],
+        "title": "BookResponse"
+      },
+      "BookTypeEnum": {
+        "type": "string",
+        "enum": [
+          "Паперова книга",
+          "Електронна книга",
+          "Аудіокнига"
+        ],
+        "title": "BookTypeEnum"
+      },
+      "CategoriesEnum": {
+        "type": "string",
+        "enum": [
+          "Дитяча література",
+          "Для підлітків",
+          "Для дорослих",
+          "Для батьків",
+          "Інша категорія"
+        ],
+        "title": "CategoriesEnum"
+      },
+      "CoverTypeEnum": {
+        "type": "string",
+        "enum": [
+          "Тверда",
+          "М’яка",
+          "Спиральна"
+        ],
+        "title": "CoverTypeEnum"
+      },
+      "GenreEnum": {
+        "type": "string",
+        "enum": [
+          "Класика",
+          "Фантастика",
+          "Наука-фантастика",
+          "Детектив",
+          "Романтика",
+          "Нехудожня-література",
+          "Розмальовки",
+          "Казки",
+          "Біографія",
+          "Історія",
+          "Поезія",
+          "Саморозвиток",
+          "Бізнес",
+          "Подорожі",
+          "Кулінарія",
+          "Інше"
+        ],
+        "title": "GenreEnum"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "LanguageEnum": {
+        "type": "string",
+        "enum": [
+          "Українська",
+          "Англійська",
+          "Російська",
+          "Німецька",
+          "Французька",
+          "Іспанська",
+          "Італійська",
+          "Польська",
+          "Китайська",
+          "Японська",
+          "Арабська",
+          "Турецька",
+          "Португальська",
+          "Голландська",
+          "Шведська",
+          "Латинська",
+          "Грецька",
+          "Іврит",
+          "Інша мова"
+        ],
+        "title": "LanguageEnum"
+      },
+      "PaperTypeEnum": {
+        "type": "string",
+        "enum": [
+          "Офсетний папір",
+          "Газетний папір",
+          "Письмовий папір",
+          "Крейдований папір",
+          "Веленевий папір",
+          "Картон"
+        ],
+        "title": "PaperTypeEnum"
+      },
+      "TargetAgesEnum": {
+        "type": "string",
+        "enum": [
+          "1-3",
+          "3-5",
+          "5-8",
+          "8-12",
+          "Підліткам",
+          "Дорослим",
+          "Інше"
+        ],
+        "title": "TargetAgesEnum"
+      },
+      "TokenModel": {
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "title": "Accesstoken"
+          },
+          "refreshToken": {
+            "type": "string",
+            "title": "Refreshtoken"
+          },
+          "tokenType": {
+            "type": "string",
+            "title": "Tokentype",
+            "default": "bearer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "accessToken",
+          "refreshToken"
+        ],
+        "title": "TokenModel"
+      },
+      "UserModel": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 5,
+            "title": "Username"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 6,
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "email",
+          "password"
+        ],
+        "title": "UserModel"
+      },
+      "UserResponse": {
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Userid"
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 250,
+            "format": "email",
+            "title": "Email"
+          },
+          "firstName": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 2,
+            "title": "Firstname"
+          },
+          "lastName": {
+            "type": "string",
+            "maxLength": 100,
+            "title": "Lastname"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "maxLength": 50,
+            "title": "Phonenumber"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Dateofbirth"
+          },
+          "address": {
+            "type": "string",
+            "maxLength": 250,
+            "title": "Address"
+          },
+          "city": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "City"
+          },
+          "postalCode": {
+            "type": "string",
+            "maxLength": 50,
+            "title": "Postalcode"
+          },
+          "country": {
+            "type": "string",
+            "maxLength": 50,
+            "title": "Country"
+          },
+          "role": {
+            "$ref": "#/components/schemas/UserRoleEnum"
+          },
+          "googleId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Googleid"
+          },
+          "googleAccessToken": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Googleaccesstoken"
+          },
+          "avatar": {
+            "type": "string",
+            "maxLength": 255,
+            "title": "Avatar"
+          },
+          "isActive": {
+            "type": "boolean",
+            "title": "Isactive"
+          },
+          "favoriteBooks": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Favoritebooks"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updatedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "userId",
+          "email",
+          "firstName",
+          "lastName",
+          "phoneNumber",
+          "dateOfBirth",
+          "address",
+          "city",
+          "postalCode",
+          "country",
+          "role",
+          "avatar",
+          "isActive",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "UserResponse"
+      },
+      "UserRoleEnum": {
+        "type": "string",
+        "enum": [
+          "Admin",
+          "SuperAdmin",
+          "User"
+        ],
+        "title": "UserRoleEnum"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

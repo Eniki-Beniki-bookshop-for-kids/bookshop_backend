@@ -8,13 +8,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.src.database.connect import session_manager
 from app.src.database.db import db
-from app.src.routes import books, comments, auth
+from app.src.routes import books, review, auth
 
 app = FastAPI()
 
-origins = [
-    "http://localhost:3000",
-]
+origins = ["http://localhost:3000", "*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -27,7 +25,7 @@ app.add_middleware(
 
 app.include_router(auth.router, prefix="/api")
 app.include_router(books.router, prefix="/products")
-app.include_router(comments.router, prefix="/comments")
+app.include_router(review.router, prefix="/reviews")
 
 
 async def check_database_health():

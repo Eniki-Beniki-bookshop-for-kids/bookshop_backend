@@ -122,7 +122,9 @@ async def get_all_books(
 
     query = (
         select(
-            total_books_subquery.label("total_books"),
+            total_books_subquery.label(
+                "total_books"
+            ),
             Book.id,
             Book.author,
             Book.title,
