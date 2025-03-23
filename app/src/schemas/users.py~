@@ -33,10 +33,7 @@ class UserModel(BaseModel):
         description="first_name: Обов'язкове поле",
         example="first_name",
     )
-    gender: enums.GenderEnum = Field(
-        description="gender: Обов'язкове поле",
-        example="чоловіча",
-    )
+    gender: enums.GenderEnum = Field(description="gender: Обов'язкове поле", example="чоловіча",)
     last_name: Optional[str] = Field(
         max_length=100,
         description="last_name: Не обов'язкове поле",
@@ -76,7 +73,6 @@ class UserResponse(BaseModel):
     last_name: Optional[str] = Field(max_length=100)
     phone_number: Optional[str] = Field(max_length=50)
     date_of_birth: Optional[datetime]
-    gender: enums.GenderEnum
     address: Optional[str] = Field(max_length=250)
     city: Optional[str] = Field(max_length=200)
     postal_code: Optional[str] = Field(max_length=50)

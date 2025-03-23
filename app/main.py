@@ -37,7 +37,7 @@ async def check_database_health():
                 print(f"Keep Alive Status: {response.status_code}")
             except Exception as e:
                 print(f"Keep Alive Failed: {e}")
-            await asyncio.sleep(150)
+            await asyncio.sleep(300)
 
 
 @app.on_event("startup")

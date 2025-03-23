@@ -31,11 +31,21 @@ async def signup(
     exist_user = await repository_users.get_user_by_email(body.email, session)
     if exist_user:
         raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT, detail="Account already exists"
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Account with this email already exists",
+        )
+    exist_user = await repository_users.get_user_by_phone_number(
+        body.phone_number, session
+    )
+    if exist_user:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="This phone number is already used",
         )
     body.password = auth_service.get_password_hash(body.password)
-    new_user = await repository_users.create_user(body, session)
-    return new_user
+    _ = await repository_users.create_user(body, session)
+    new_user = await repository_users.get_user_by_email(body.email, session)
+    return UserResponse(user_id=new_user.id, **new_user.__dict__)
 
 
 @router.post(
@@ -48,10 +58,13 @@ async def login(
     session: AsyncSession = Depends(db),
 ):
     user = await repository_users.get_user_by_email(body.username, session)
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email"
-        )
+    if not user:
+        user = await repository_users.get_user_by_phone_number(body.username, session)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid email or phone number",
+            )
     # if not user.confirmed:
     #     raise HTTPException(
     #         status_code=status.HTTP_401_UNAUTHORIZED, detail="Email not confirmed"

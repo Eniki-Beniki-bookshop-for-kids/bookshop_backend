@@ -33,6 +33,8 @@ async def create_user(
     avatar = Gravatar(body.email)
     new_user = User(
         **body.dict(),
+        user_id
+
         avatar=avatar.get_image(),
     )
     session.add(new_user)

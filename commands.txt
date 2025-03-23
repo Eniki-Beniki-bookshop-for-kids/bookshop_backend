@@ -12,6 +12,7 @@ alembic init migrations
 
 alembic revision --autogenerate -m "Initial migration"
 alembic revision --autogenerate -m "initial create tables books_users_reviews"
+alembic revision --autogenerate -m "add_gender_field_to_user_table"
 alembic upgrade head
 alembic downgrade -2
 
