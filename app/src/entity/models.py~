@@ -210,7 +210,6 @@ class User(Base):
     last_name = Column(String(100), nullable=True)
     phone_number = Column(String(50), unique=True, index=True, nullable=True)
     date_of_birth = Column(DateTime, default=func.now())
-    gender = Column(Enum(enums.GenderEnum), nullable=False, server_default="інша")
     address = Column(String(250))
     city = Column(String(200))
     postal_code = Column(String(50))

@@ -63,12 +63,6 @@ class PaperTypeEnum(enum.Enum):
     cardboard: str = "Картон"
 
 
-class UserRoleEnum(enum.Enum):
-    admin: str = "Admin"
-    superadmin: str = "SuperAdmin"
-    user: str = "User"
-
-
 class CategoriesEnum(enum.Enum):
     children_literature: str = "Дитяча література"
     young_adult: str = "Для підлітків"
@@ -85,3 +79,15 @@ class TargetAgesEnum(enum.Enum):
     teenager: str = "Підліткам"
     adult: str = "Дорослим"
     other_target: str = "Інше"
+
+
+class UserRoleEnum(enum.Enum):
+    admin: str = "Admin"
+    superadmin: str = "SuperAdmin"
+    user: str = "User"
+
+
+class GenderEnum(enum.Enum):
+    male: str = "чоловіча"
+    female: str = "жіноча"
+    other_gender: str = "інша"
