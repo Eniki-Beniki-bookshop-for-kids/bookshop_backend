@@ -94,8 +94,7 @@ class BookPaginationResponse(BaseModel):
     total_books: int
     total_pages: int
     current_page: int
-    limit: int
-    offset: int
+    size: int
     books: List[BookResponse]
 
     model_config = ConfigDict(
