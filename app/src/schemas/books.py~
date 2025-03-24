@@ -94,8 +94,6 @@ class BookPaginationResponse(BaseModel):
     total_books: int
     total_pages: int
     current_page: int
-    limit: int
-    offset: int
     books: List[BookResponse]
 
     model_config = ConfigDict(
@@ -127,8 +125,12 @@ class BookFilterParams(BaseModel):
     discount_max: Optional[float] = Field(
         None, ge=0, le=1, description="max поріг знижки"
     )
-    actual_price_min: Optional[float] = Field(None, ge=0, description="min поріг actual_price")
-    actual_price_max: Optional[float] = Field(None, ge=0, description="max поріг actual_price")
+    actual_price_min: Optional[float] = Field(
+        None, ge=0, description="min поріг actual_price"
+    )
+    actual_price_max: Optional[float] = Field(
+        None, ge=0, description="max поріг actual_price"
+    )
     created_at_after: Optional[str] = Field(
         None, description="Filter by creation date after"
     )
