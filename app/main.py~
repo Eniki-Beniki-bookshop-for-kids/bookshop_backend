@@ -14,7 +14,7 @@ from app.src.routes import books, review, auth
 
 app = FastAPI()
 
-origins = ["*"]
+origins = ["http://localhost:3000", "*"]
 
 app.add_middleware(
     CORSMiddleware,

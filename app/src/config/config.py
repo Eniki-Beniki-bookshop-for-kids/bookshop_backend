@@ -20,6 +20,10 @@ class Settings(BaseSettings):
     secret_key: str
     algorithm: str
 
+    google_client_id: str
+    google_client_secret: str
+    google_redirect_uri: str
+
     # mail_username: str
     # mail_password: str
     # mail_from: str

@@ -178,5 +178,5 @@ async def auth_google(request: Request, session: AsyncSession = Depends(db)):
         "access_token": access_token,
         "refresh_token": refresh_token,
         "token_type": "bearer",
-        "user": UserResponse(user_id=user.id, **user.__dict__),
+        'user': UserResponse()
     }
