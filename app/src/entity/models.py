@@ -218,6 +218,9 @@ class User(Base):
     role = Column(Enum(enums.UserRoleEnum), nullable=False, server_default="user")
     google_id = Column(String(255), unique=True, nullable=True)
     google_access_token = Column(String(512), nullable=True)
+    login_method = Column(
+        String(20), nullable=False, default="local", server_default="local"
+    )
     avatar = Column(String(255), nullable=True)
     is_active = Column(Boolean, default=True)
 

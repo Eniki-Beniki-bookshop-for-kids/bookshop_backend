@@ -83,7 +83,7 @@ class UserResponse(BaseModel):
     country: Optional[str] = Field(max_length=50)
     role: enums.UserRoleEnum
     google_id: Optional[str] = None
-    google_access_token: Optional[str] = None
+    # google_access_token: Optional[str] = None
     avatar: str = Field(max_length=255)
     is_active: bool
     # is_confirmed: bool
@@ -103,6 +103,32 @@ class TokenModel(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+        arbitrary_types_allowed=True,
+    )
+
+
+class GoogleUser(BaseModel):
+    sub: int
+    email: str
+    given_name: str
+    family_name: str
+    picture: str
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+        arbitrary_types_allowed=True,
+    )
+
+
+class GoogleResponse(TokenModel):
+    user: UserResponse
 
     model_config = ConfigDict(
         alias_generator=to_camel,

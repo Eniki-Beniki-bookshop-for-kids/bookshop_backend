@@ -33,7 +33,10 @@ class UserModel(BaseModel):
         description="first_name: Обов'язкове поле",
         example="first_name",
     )
-    gender: enums.GenderEnum = Field(description="gender: Обов'язкове поле", example="чоловіча",)
+    gender: enums.GenderEnum = Field(
+        description="gender: Обов'язкове поле",
+        example="чоловіча",
+    )
     last_name: Optional[str] = Field(
         max_length=100,
         description="last_name: Не обов'язкове поле",
@@ -73,6 +76,7 @@ class UserResponse(BaseModel):
     last_name: Optional[str] = Field(max_length=100)
     phone_number: Optional[str] = Field(max_length=50)
     date_of_birth: Optional[datetime]
+    gender: enums.GenderEnum
     address: Optional[str] = Field(max_length=250)
     city: Optional[str] = Field(max_length=200)
     postal_code: Optional[str] = Field(max_length=50)
@@ -99,6 +103,32 @@ class TokenModel(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+        arbitrary_types_allowed=True,
+    )
+
+
+class GoogleUser(BaseModel):
+    sub: int
+    email: str
+    given_name: str
+    family_name: str
+    picture: str
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        from_attributes=True,
+        arbitrary_types_allowed=True,
+    )
+
+
+class GoogleResponse(TokenModel):
+    user: UserResponse
 
     model_config = ConfigDict(
         alias_generator=to_camel,
