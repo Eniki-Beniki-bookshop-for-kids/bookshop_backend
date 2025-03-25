@@ -88,6 +88,7 @@ async def create_user_from_google_info(
             last_name=google_user.family_name,
             gender=enums.GenderEnum.other_gender,
             avatar=google_user.picture,
+            google_id=str(google_id),
             login_method="google",
             password="*",
             is_confirmed=True,
