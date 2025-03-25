@@ -120,6 +120,7 @@ class Auth(Token):
 
         try:
             # Decode JWT
+            print(f"token = {token}")
             payload = jwt.decode(
                 token, self.config.SECRET_KEY, algorithms=[self.config.ALGORITHM]
             )

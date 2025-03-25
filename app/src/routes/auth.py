@@ -4,6 +4,7 @@ from fastapi.security import (
     OAuth2PasswordRequestForm,
     HTTPAuthorizationCredentials,
     HTTPBearer,
+    OAuth2PasswordBearer,
 )
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse
@@ -103,6 +104,7 @@ async def login(
     access_token = await auth_service.create_access_token(data={"sub": user.email})
     refresh_token_ = await auth_service.create_refresh_token(data={"sub": user.email})
     await repository_users.update_token(user, refresh_token_, session)
+    print(access_token)
     return {
         "access_token": access_token,
         "refresh_token": refresh_token_,
@@ -127,11 +129,11 @@ async def refresh_token(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token"
         )
     access_token = await auth_service.create_access_token(data={"sub": email})
-    refresh_token = await auth_service.create_refresh_token(data={"sub": email})
-    await repository_users.update_token(user, refresh_token, session)
+    refresh_token_ = await auth_service.create_refresh_token(data={"sub": email})
+    await repository_users.update_token(user, refresh_token_, session)
     return {
         "access_token": access_token,
-        "refresh_token": refresh_token,
+        "refresh_token": refresh_token_,
         "token_type": "bearer",
     }
 
@@ -166,7 +168,7 @@ async def auth_google(request: Request, session: AsyncSession = Depends(db)):
             )
 
         access_token = await auth_service.create_access_token(data={"sub": user.email})
-        refresh_token = await auth_service.create_refresh_token(
+        refresh_token_ = await auth_service.create_refresh_token(
             data={"sub": user.email}
         )
 
@@ -176,7 +178,7 @@ async def auth_google(request: Request, session: AsyncSession = Depends(db)):
 
     return {
         "access_token": access_token,
-        "refresh_token": refresh_token,
+        "refresh_token": refresh_token_,
         "token_type": "bearer",
         "user": UserResponse(user_id=user.id, **user.__dict__),
     }

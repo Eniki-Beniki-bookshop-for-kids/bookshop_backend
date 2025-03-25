@@ -43,7 +43,7 @@ async def get_all_books(
                         "review_name",
                         User.first_name,
                         "avatar",
-                        User.last_name,
+                        User.avatar,
                         "created_at",
                         Review.created_at,
                         "updated_at",

@@ -3,6 +3,7 @@ import httpx
 
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.models import OAuthFlows, OAuthFlowAuthorizationCode
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.middleware.sessions import SessionMiddleware
@@ -14,7 +15,7 @@ from app.src.routes import books, review, auth
 
 app = FastAPI()
 
-origins = ["*"]
+origins = ["http://localhost:8000", "*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,6 +30,26 @@ app.add_middleware(SessionMiddleware, secret_key=settings.secret_key)
 app.include_router(auth.router, prefix="/api")
 app.include_router(books.router, prefix="/products")
 app.include_router(review.router, prefix="/reviews")
+
+
+@app.get("/openapi.json")
+async def get_openapi():
+    openapi = app.openapi()
+
+    # Додаємо Google OAuth в components -> securitySchemes
+    openapi["components"]["securitySchemes"] = {
+        "google_oauth2": {
+            "type": "oauth2",
+            "flows": OAuthFlows(
+                authorizationCode=OAuthFlowAuthorizationCode(
+                    authorizationUrl="https://accounts.google.com/o/oauth2/auth",
+                    tokenUrl="https://oauth2.googleapis.com/token",
+                )
+            ),
+        }
+    }
+
+    return openapi
 
 
 async def check_database_health():

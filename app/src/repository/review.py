@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 
 from fastapi import HTTPException
@@ -8,15 +9,19 @@ from app.src.entity.models import Review, User, Book
 from app.src.schemas.review import ReviewModel
 
 
-async def get_review_by_id(session: AsyncSession, review_id: int, user_id: int):
+async def get_review_by_id(session: AsyncSession, review_id: uuid.UUID, user_id: int):
     query = (
-        select(Review).where(Review.id == review_id).where(Review.user_id == user_id)
+        select(
+            Review,
+        )
+        .where(Review.id == review_id)
+        .where(Review.user_id == user_id)
     )
     result = await session.execute(query)
     return result.scalars().first()
 
 
-async def get_reviews_by_book(session: AsyncSession, book_id: int):
+async def get_reviews_by_user(session: AsyncSession, user: User):
     query = (
         select(
             Review.id,
@@ -27,7 +32,7 @@ async def get_reviews_by_book(session: AsyncSession, book_id: int):
             Review.created_at,
             Review.updated_at,
         )
-        .where(Review.book_id == book_id)
+        .where(Review.user_id == user.id)
         .order_by(desc(Review.updated_at))
     )
     reviews = await session.execute(query)
@@ -57,7 +62,7 @@ async def post_review(
 
 
 async def update_review(
-    review_id: int,
+    review_id: uuid.UUID,
     body: ReviewModel,
     user: User,
     session: AsyncSession,
@@ -72,7 +77,7 @@ async def update_review(
     return review
 
 
-async def remove_review(review_id: int, session: AsyncSession, user: User):
+async def remove_review(review_id: uuid.UUID, session: AsyncSession, user: User):
     review = await get_review_by_id(session, review_id, user.id)
     if review:
         await session.delete(review)
